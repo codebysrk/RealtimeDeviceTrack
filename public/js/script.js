@@ -1,9 +1,17 @@
 const socket = io();
 
+socket.on("connect", () => {
+  console.log("Connected to server");
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Connection failed", err);
+  alert("Connection to server failed! Realtime tracking may not work.");
+});
+
 let map;
 let userMarker;
 
-// Define tile layers
 const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 });
@@ -14,9 +22,8 @@ const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/
 
 let currentLayer = osmLayer;
 
-// Function to initialize the map
 function initializeMap(latitude, longitude) {
-  if (map) return; // Initialize map only once
+  if (map) return;
 
   map = L.map('map').setView([latitude, longitude], 16);
   currentLayer.addTo(map);
@@ -31,33 +38,33 @@ if ('geolocation' in navigator) {
 
       if (!map) {
         initializeMap(latitude, longitude);
+      } else {
       }
 
-      // Update user's marker position
       if (userMarker) {
         userMarker.setLatLng([latitude, longitude]);
-        map.setView([latitude, longitude]);
+      } else {
+        userMarker = L.marker([latitude, longitude]).addTo(map).bindPopup('You are here!').openPopup();
+        map.setView([latitude, longitude], 16);
       }
-      
+
       socket.emit('sendLocation', { latitude, longitude });
     },
     (err) => {
       console.error('Error:', err.message);
       if (!map) {
-        // Fallback to a default location if geolocation fails
-        initializeMap(51.505, -0.09);
-        alert('Geolocation is not available or denied. Showing a default location.');
+        initializeMap(20.5937, 78.9629);
+        alert('Geolocation request failed. Defaulting to India view. Please enable location services.');
       }
     },
     {
       enableHighAccuracy: true,
-      timeout: 5000,
+      timeout: 10000,
       maximumAge: 0,
     }
   );
 } else {
   console.log('Geolocation not supported');
-  // Fallback to a default location if geolocation is not supported
   initializeMap(51.505, -0.09);
   alert('Geolocation is not supported by your browser. Showing a default location.');
 }
@@ -67,7 +74,6 @@ const markers = {};
 socket.on('getLocation', (data) => {
   const { id, latitude, longitude } = data;
 
-  // Don't create a marker for the current user
   if (id === socket.id) return;
 
   if (markers[id]) {
@@ -86,7 +92,6 @@ socket.on('user-disconnected', (id) => {
   }
 });
 
-// Toggle view button
 const toggleBtn = document.getElementById('toggle-view-btn');
 toggleBtn.addEventListener('click', () => {
   map.removeLayer(currentLayer);

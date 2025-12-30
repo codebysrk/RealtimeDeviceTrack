@@ -1,22 +1,47 @@
-# Realtime Device Track
+# 📍 Realtime Device Tracker
 
-A real-time device tracking application.
+A real-time location tracking application built with Node.js, Express, Socket.io, and Leaflet API.
 
-## Features
+## 🚀 Features
 
-_(Describe the features of your application here)_
+- **Real-time Tracking**: Setup a socket connection to track devices instantly.
+- **Smart Map Integration**: Uses Leaflet API with OpenStreetMap and Satellite views.
+- **Auto-Centering**: Map automatically centers on the first valid location found.
+- **Live Updates**: User movement is updated on the map in real-time.
+- **Robust Error Handling**: Alerts users if the connection to the server fails.
+- **Privacy**: Markers for other users are visible, but your own view remains stable for better navigation.
 
-## Getting Started
+## 🛠️ Tech Stack
 
-### Prerequisites
+- **Backend**: Node.js, Express.js, Socket.io
+- **Frontend**: HTML5, CSS3, JavaScript (Leaflet.js)
+- **Templating**: EJS
 
-- Node.js
-- npm or yarn
+## ⚙️ Installation & Run
 
-### Installation
+1.  **Clone the repository**
+    ```bash
+    git clone <repository-url>
+    cd RealtimeDeviceTrack
+    ```
 
-1. Clone the repository: `git clone https://github.com/codebysrk/RealtimeDeviceTrack.git`
-2. Navigate to the project directory: `cd RealtimeDeviceTrack`
-3. Install dependencies: `npm install`
-4. Create a `.env` file by copying `.env.example` and fill in the required environment variables.
-5. Start the server: `npm start`
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Start the Server**
+    ```bash
+    npm run start
+    ```
+
+4.  **Access the App**
+    Open your browser and visit: `http://localhost:3000`
+
+## 🛡️ Security
+
+- Backend validation ensures that only valid numeric coordinates are broadcasted.
+
+## 🤝 Contributing
+
+Feel free to fork this repository and submit pull requests.
